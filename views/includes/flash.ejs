@@ -1,0 +1,29 @@
+<% if (success && success.length) { %>
+    <% success.forEach(msg => { %>
+      <div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
+        <%= msg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% }); %>
+  <% } %>
+  
+  <% if (error && error.length) { %>
+    <% error.forEach(msg => { %>
+      <div class="alert alert-danger col-6 offset-3 alert-dismissible fade show" role="alert">
+        <%= msg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% }); %>
+  <% } %>
+  
+  <script>
+    setTimeout(() => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => {
+        alert.classList.remove('show');
+        alert.classList.add('fade');
+        setTimeout(() => alert.remove(), 300); // Remove from DOM after fade out
+      });
+    }, 2000); // 1000ms = 1 second
+  </script>
+  
