@@ -10,10 +10,6 @@ const {validateReview, isLoggedIn, isReviewAuthor}=require("../middleware.js")
 //controllers
 const reviewController=require("../controllers/reviews.js")
 
-//review validated
-
-
-
 
 //reviews
 //post route
