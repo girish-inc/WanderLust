@@ -7,6 +7,11 @@ const {listingJoiSchema,reviewSchema}=require("../schema.js")
 const wrapAsync =require("../utils/wrapAsync.js");
 const ExpressError= require("../utils/ExpressError.js")
 const {isLoggedIn,isOwner,validateListing}=require("../middleware.js")
+const multer  = require('multer')
+
+const {storage}=require("../cloudConfig.js")
+const upload = multer({ storage }) 
+
 
 //controllers
 const listingController=require("../controllers/listings.js")
@@ -15,7 +20,7 @@ const listingController=require("../controllers/listings.js")
 router
   .route("/")
   .get(wrapAsync( listingController.index))//index route
-  .post(isLoggedIn,validateListing, wrapAsync(listingController.createListing) );//create route
+  .post(isLoggedIn, upload.single("listing[image][url]"),validateListing,wrapAsync(listingController.createListing) );//create route
 
 
 //New Route
@@ -25,7 +30,7 @@ router.get("/new",isLoggedIn,listingController.renderNewForm);
 router
   .route("/:id") 
   .get( wrapAsync(listingController.showListing))//show route 
-  .put(isLoggedIn,isOwner,validateListing,wrapAsync( listingController.updateListing))//update route
+  .put(isLoggedIn,isOwner,upload.single("listing[image][url]"),validateListing,wrapAsync( listingController.updateListing))//update route
   .delete(isLoggedIn,isOwner,wrapAsync(listingController.destroyListing))//delet route
 
 
