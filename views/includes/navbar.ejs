@@ -1,3 +1,32 @@
+<style>
+  .btn-search{
+    background-color: #cb4c54;
+    color: white;
+
+  }
+  .btn-search:hover{
+    background-color: #cb4c54;
+    color: white;
+  }
+
+  .btn-search {
+    display: flex;
+    align-items: center;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+  }
+
+  .btn-search i{
+    margin-right: .5rem;
+  }
+
+  .search-inp{
+    border-radius: 25px;
+    padding: 0.5rem 3rem;
+  }
+</style>
+
+
 <nav class="navbar navbar-expand-sm bg-body-light border-bottom sticky-top ">
     <div class="container-fluid m-5">
       <a class="navbar-brand" href="/listings"><img src="https://cdn-icons-png.freepik.com/256/11499/11499703.png?ga=GA1.1.1476991640.1707029425" alt="Home icon" height="40px"></a>
@@ -10,6 +39,14 @@
           <a class="nav-link" href="/listings">Explore</a>
           
         </div>
+
+        <div class="navbar-nav ms-auto">
+          <form class="d-flex" role="search">
+             <input class="form-control me-2 search-inp" type="search" placeholder="Search Destinations" aria-label="Search">
+             <button class="btn btn-search" type="submit"> <i class="fa-solid fa-magnifying-glass"></i> &nbsp;<b>Search</b> </button>
+           </form>
+        </div>
+
         <div class="navbar-nav ms-auto">
           <a class="nav-link" href="/listings/new">Airbnb your home</a>
           <% if(!currUser){ %>
