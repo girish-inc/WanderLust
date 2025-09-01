@@ -25,25 +25,43 @@ const listingsRouter=require("./routes/listing.js")
 const reviewsRouter=require("./routes/review.js")
 const userRouter= require("./routes/user.js");
 
+// Use local database for development, Atlas for production
 const MONGO_URL = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
+console.log("Connecting to database...", process.env.NODE_ENV === 'production' ? 'Atlas' : 'Local');
 main()
   .then(() => {
     console.log("connected to DB");
+    initializeDatabase();
   })
   .catch((err) => {
     console.log(err);
   });
 
 async function main() {
-  await mongoose.connect(MONGO_URL, {
-    serverSelectionTimeoutMS: 30000, // 30 seconds
-    socketTimeoutMS: 45000, // 45 seconds
-    bufferMaxEntries: 0,
-    maxPoolSize: 10,
-    minPoolSize: 5,
-    maxIdleTimeMS: 30000,
-    connectTimeoutMS: 30000
-  });
+  await mongoose.connect(MONGO_URL);
+}
+
+// Initialize database with sample data if empty
+async function initializeDatabase() {
+  try {
+    const count = await Listing.countDocuments({});
+    if (count === 0) {
+      console.log("Database is empty, initializing with sample data...");
+      const initData = require("./init/data.js");
+      
+      const listingsWithOwner = initData.data.map((obj) => ({
+        ...obj,
+        owner: "68b540bd50b247caf68fec33"
+      }));
+      
+      await Listing.insertMany(listingsWithOwner);
+      console.log(`Initialized database with ${listingsWithOwner.length} listings`);
+    } else {
+      console.log(`Database already has ${count} listings`);
+    }
+  } catch (error) {
+    console.log("Error initializing database:", error.message);
+  }
 }
 
 app.set("view engine", "ejs");
