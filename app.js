@@ -35,7 +35,15 @@ main()
   });
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(MONGO_URL, {
+    serverSelectionTimeoutMS: 30000, // 30 seconds
+    socketTimeoutMS: 45000, // 45 seconds
+    bufferMaxEntries: 0,
+    maxPoolSize: 10,
+    minPoolSize: 5,
+    maxIdleTimeMS: 30000,
+    connectTimeoutMS: 30000
+  });
 }
 
 app.set("view engine", "ejs");
