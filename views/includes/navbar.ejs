@@ -1,11 +1,11 @@
 <style>
   .btn-search{
-    background-color: #cb4c54;
+    background-color: #fe424d;
     color: white;
 
   }
   .btn-search:hover{
-    background-color: #cb4c54;
+    background-color: #fe424d;
     color: white;
   }
 
@@ -41,8 +41,8 @@
         </div>
 
         <div class="navbar-nav ms-auto">
-          <form class="d-flex" role="search">
-             <input class="form-control me-2 search-inp" type="search" placeholder="Search Destinations" aria-label="Search">
+          <form class="d-flex" role="search" action="/listings/search" method="GET">
+             <input class="form-control me-2 search-inp" type="search" name="q" placeholder="Search Destinations" aria-label="Search">
              <button class="btn btn-search" type="submit"> <i class="fa-solid fa-magnifying-glass"></i> &nbsp;<b>Search</b> </button>
            </form>
         </div>

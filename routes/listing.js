@@ -26,6 +26,18 @@ router
 //New Route
 router.get("/new",isLoggedIn,listingController.renderNewForm);
 
+//Filter by category route
+router.get("/category/:category", wrapAsync(listingController.filterByCategory));
+
+//Search route
+router.get("/search", wrapAsync(listingController.searchListings));
+
+// API endpoint for filtered listings (AJAX)
+router.get("/api/filter/:category", wrapAsync(listingController.getFilteredListingsAPI));
+
+// API endpoint for all listings (AJAX)
+router.get("/api/all", wrapAsync(listingController.getAllListingsAPI));
+
 
 router
   .route("/:id") 

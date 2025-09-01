@@ -1,9 +1,16 @@
 {
-  "name": "airbnb",
+  "name": "wanderlust",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build": "echo \"No build step required for this Node.js app\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
   },
   "keywords": [],
   "author": "",

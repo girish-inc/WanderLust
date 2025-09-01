@@ -25,7 +25,7 @@ const listingsRouter=require("./routes/listing.js")
 const reviewsRouter=require("./routes/review.js")
 const userRouter= require("./routes/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 main()
   .then(() => {
     console.log("connected to DB");
@@ -43,17 +43,18 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine('ejs',ejsMate);
-app.use(express.static(path.join(__dirname,"/public")));
+app.use(express.static(path.join(__dirname,"/Public")));
 
 
 const sessionOptions={
-  secret:"mysupersecretsession",
+  secret:process.env.SESSION_SECRET || "mysupersecretsession",
   resave:false,
   saveUninitialized:true,
   cookie:{
     expires:Date.now() + 7 * 24 *60 *60* 1000,//set in miliseconds
     maxAge: 7 * 24 *60 *60* 1000,
-    httpOnly:true
+    httpOnly:true,
+    secure: process.env.NODE_ENV === "production" // Enable secure cookies in production
   }
 }
 
@@ -67,9 +68,9 @@ passport.use(new LocalStratergy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// app.get("/", (req, res) => {
-//   res.send("Hi, I am root");
-// });
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 app.use((req, res, next) => {
   res.locals.success = req.flash('success') || [];
@@ -91,14 +92,7 @@ app.use("/", userRouter);
 
 
 
-app.get("/demouser",async(req,res)=>{
-  let fakeUser=new User({
-    email:"student@gmail.com",
-    username:"student1"
-  })
-  let registeredUser=await User.register(fakeUser,"helloworld");
-  res.send(registeredUser);
-})
+// Demo user route removed for production security
 
 //if not match with nothing
 app.all("*",(req,res,next)=>{
@@ -112,6 +106,7 @@ app.use((err,req,res,next)=>{
   // res.status(StatusCode).send(message);
 })
 
-app.listen(8080, () => {
-  console.log("server is listening to port 8080");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`server is listening to port ${PORT}`);
 });

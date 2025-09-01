@@ -18,6 +18,12 @@
         cursor: pointer;
       }
 
+      .filter.active{
+        opacity: 1;
+        border-bottom: 2px solid #fe424d;
+        color: #fe424d;
+      }
+
       .filter p{
         font-size: .8rem;
       }
@@ -35,6 +41,41 @@
         margin-left:4.2rem;
         display: flex;
         align-items: center;
+      }
+
+      .price-section {
+        margin-top: 5px;
+      }
+
+      .tax-btn {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        transition: all 0.3s ease;
+      }
+
+      .tax-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .tax-breakdown-card {
+        animation: slideDown 0.3s ease-out;
+        max-width: 200px;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .listing-card {
+        position: relative;
+        overflow: visible;
       }
     </style>
 
@@ -97,8 +138,28 @@
                 <b><%= listing.title %></b> <br>
                 <!-- <%= listing.description %> <br> -->
                 <% if (typeof listing.price === 'number') { %>
-                  &#8377; <%= listing.price.toLocaleString("en-IN") %>/night 
-                &nbsp;&nbsp; <i class="tax-info" >+18% GST</i>
+                  <div class="price-section">
+                    <span class="original-price">&#8377; <%= listing.price.toLocaleString("en-IN") %>/night</span>
+                    <i class="tax-info">+18% GST</i>
+                    <br>
+                    <div class="tax-breakdown-card tax-breakdown-global" style="display: none;">
+                      <div class="small mt-2 p-2 border rounded bg-light">
+                        <div class="d-flex justify-content-between">
+                          <span>Original:</span>
+                          <span>&#8377; <%= listing.price.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                          <span>Tax (18%):</span>
+                          <span>&#8377; <%= Math.round(listing.price * 0.18).toLocaleString("en-IN") %></span>
+                        </div>
+                        <hr class="my-1">
+                        <div class="d-flex justify-content-between fw-bold">
+                          <span>Total:</span>
+                          <span>&#8377; <%= Math.round(listing.price * 1.18).toLocaleString("en-IN") %></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 <% } else { %>
                   <i>Price not available</i><br>
                 <% } %>
@@ -112,17 +173,20 @@
     </div>
     </ul>
 
+    <script src="/javascript/script.js"></script>
+    
     <script>
-      let taxSwitch=document.getElementById("flexSwitchCheckDefault");
-      taxSwitch.addEventListener("click",()=>{
-        let taxInfo =document.getElementsByClassName("tax-info");
-        for(info of taxInfo){
-          if(info.style.display != "inline"){
-            info.style.display="inline";
-          }
-          else{
-            info.style.display="none";
-          }
+    // Global tax toggle functionality
+    document.getElementById('flexSwitchCheckDefault').addEventListener('change', function() {
+      const taxBreakdowns = document.querySelectorAll('.tax-breakdown-global');
+      const isChecked = this.checked;
+      
+      taxBreakdowns.forEach(breakdown => {
+        if (isChecked) {
+          breakdown.style.display = 'block';
+        } else {
+          breakdown.style.display = 'none';
         }
-      })
+      });
+    });
     </script>

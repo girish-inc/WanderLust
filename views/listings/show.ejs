@@ -1,4 +1,38 @@
 <%- layout("/layouts/boilerplate") %>
+
+<style>
+.tax-section {
+  margin-top: 15px;
+}
+
+.tax-breakdown {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.breakdown-line {
+  padding: 2px 0;
+  font-size: 14px;
+}
+
+.breakdown-line:last-child {
+  font-size: 16px;
+  color: #0d6efd;
+}
+
+#taxButton {
+  transition: all 0.3s ease;
+}
+
+#taxButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+</style>
     <div class="mt-3 row">
       <div class="col-6 offset-2">
         <h3><%= listing.title %></h3>
@@ -14,6 +48,33 @@
               <% } else { %>
                 <i>Price not available</i>
               <% } %></b><br>
+              
+              <!-- Tax Calculation Section -->
+              <% if (typeof listing.price === 'number') { %>
+              <div class="tax-section mt-3">
+                <button id="taxButton" class="btn btn-outline-primary btn-sm" onclick="toggleTaxBreakdown()">Display After Taxes</button>
+                <div id="taxBreakdown" class="tax-breakdown mt-2" style="display: none;">
+                  <div class="card border-info">
+                    <div class="card-body p-3">
+                      <h6 class="card-title text-info mb-2">Price Breakdown</h6>
+                      <div class="breakdown-line d-flex justify-content-between">
+                        <span>Original Price:</span>
+                        <span id="originalPrice">&#8377; <%= listing.price.toLocaleString("en-IN") %></span>
+                      </div>
+                      <div class="breakdown-line d-flex justify-content-between">
+                        <span>Tax Amount (18% GST):</span>
+                        <span id="taxAmount">&#8377; <%= Math.round(listing.price * 0.18).toLocaleString("en-IN") %></span>
+                      </div>
+                      <hr class="my-2">
+                      <div class="breakdown-line d-flex justify-content-between font-weight-bold">
+                        <strong>Total After Tax:</strong>
+                        <strong id="totalAfterTax">&#8377; <%= Math.round(listing.price * 1.18).toLocaleString("en-IN") %></strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% } %>
               <%= listing.location %> <br>
               <%= listing.country %>
             </p>
@@ -90,6 +151,25 @@
       </div>
       </div>
     </div>
+
+<script>
+function toggleTaxBreakdown() {
+  const taxBreakdown = document.getElementById('taxBreakdown');
+  const taxButton = document.getElementById('taxButton');
+  
+  if (taxBreakdown.style.display === 'none' || taxBreakdown.style.display === '') {
+    taxBreakdown.style.display = 'block';
+    taxButton.textContent = 'Hide Tax Breakdown';
+    taxButton.classList.remove('btn-outline-primary');
+    taxButton.classList.add('btn-primary');
+  } else {
+    taxBreakdown.style.display = 'none';
+    taxButton.textContent = 'Display After Taxes';
+    taxButton.classList.remove('btn-primary');
+    taxButton.classList.add('btn-outline-primary');
+  }
+}
+</script>
     
 
     

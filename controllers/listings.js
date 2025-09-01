@@ -6,6 +6,53 @@ module.exports.index=async (req, res) => {
     res.render("listings/index.ejs", { allListings });
   }
 
+module.exports.filterByCategory=async (req, res) => {
+    const { category } = req.params;
+    const filteredListings = await Listing.find({ category: category });
+    res.render("listings/index.ejs", { allListings: filteredListings });
+  }
+
+module.exports.searchListings=async (req, res) => {
+    const { q } = req.query;
+    let searchResults = [];
+    
+    if (q && q.trim() !== '') {
+      const searchQuery = q.trim();
+      searchResults = await Listing.find({
+        $or: [
+          { title: { $regex: searchQuery, $options: 'i' } },
+          { description: { $regex: searchQuery, $options: 'i' } },
+          { location: { $regex: searchQuery, $options: 'i' } },
+          { country: { $regex: searchQuery, $options: 'i' } }
+        ]
+      });
+    }
+    
+    res.render("listings/index.ejs", { allListings: searchResults });
+  }
+
+// API endpoint for filtered listings
+module.exports.getFilteredListingsAPI = async (req, res) => {
+    const { category } = req.params;
+    
+    try {
+        const allListings = await Listing.find({ category: category });
+        res.json({ success: true, listings: allListings });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// API endpoint for all listings
+module.exports.getAllListingsAPI = async (req, res) => {
+    try {
+        const allListings = await Listing.find({});
+        res.json({ success: true, listings: allListings });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
 module.exports.renderNewForm=(req, res) => {
   res.render("listings/new.ejs");
 }  

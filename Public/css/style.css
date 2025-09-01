@@ -11,10 +11,24 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    opacity: 0;
+    animation: fadeInPage 0.6s ease-in-out forwards;
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .container{
     flex: 1;
+    transition: all 0.3s ease-in-out;
 }
 
 /* navbar */
@@ -72,7 +86,27 @@ body{
 /* cards */
 .listing-card{
     border: none !important; 
-    margin-bottom: 2rem;    
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInCard 0.8s ease-out forwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+@keyframes fadeInCard {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .card-img-top{
@@ -110,4 +144,53 @@ body{
 }
 .btns{
     display: flex;
+}
+
+/* Smooth transitions for filters and content loading */
+.filter {
+    transition: all 0.3s ease;
+}
+
+.filter:hover {
+    transform: translateY(-2px);
+}
+
+.filter.active {
+    transition: all 0.4s ease;
+}
+
+/* Loading animation for content sections */
+.row {
+    animation: slideInContent 0.7s ease-out;
+}
+
+@keyframes slideInContent {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Staggered animation for cards */
+.listing-card:nth-child(1) { animation-delay: 0.1s; }
+.listing-card:nth-child(2) { animation-delay: 0.2s; }
+.listing-card:nth-child(3) { animation-delay: 0.3s; }
+.listing-card:nth-child(4) { animation-delay: 0.4s; }
+.listing-card:nth-child(5) { animation-delay: 0.5s; }
+.listing-card:nth-child(6) { animation-delay: 0.6s; }
+.listing-card:nth-child(7) { animation-delay: 0.7s; }
+.listing-card:nth-child(8) { animation-delay: 0.8s; }
+
+/* Smooth page transitions */
+.page-transition {
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.page-transition.loaded {
+    opacity: 1;
 }
